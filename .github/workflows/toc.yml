@@ -1,0 +1,28 @@
+name: toc        
+on:
+  schedule:
+    - cron: '45 22 * * MON'
+  workflow_dispatch:
+  
+jobs:
+  toc:
+    name: 'toc update'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: 'create readme'
+        uses: 'clouddrove/github-actions@master'
+        with:  
+          actions_subcommand: 'toc'
+          modules: 'terraform-digitalocean'
+          github_token: ${{ secrets.GITHUB }}
+          
+      - name: 'push readme'
+        uses: 'clouddrove/github-actions@v9.0.2'
+        continue-on-error: true
+        with:
+          actions_subcommand: 'push'
+        env:
+          github_token: ${{ secrets.GITHUB }}
